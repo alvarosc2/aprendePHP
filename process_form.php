@@ -5,17 +5,24 @@
     $pass = '';
     $schema = 'registro';
 
-    $conexion = mysqli_connect($host, $user, $pass, $schema);
+    $mysqli = new mysqli($host, $user, $pass, $schema);
 
     // Comprobar si la conexion es correcta
     if (mysqli_connect_errno()) {
         echo "La conexion a la base de datos ha fallado: ".mysqli_connect_errno();
     } 
     else {
-        echo "conexion realizada correctamente.";
+        echo "Conexion realizada correctamente.";
     }
+
     // Insertar en la base de datos
-    $query = "INSERT INTO lista_visitantes(
+    $nombre = $_POST['nombre'];
+    $apellidos = $_POST['apellidos'];
+    $edad = $_POST['edad'];
+    $email = $_POST['email'];
+    $pass = $_POST['pass'];
+
+    $stmt = $mysqli->prepare("INSERT INTO lista_visitantes(
         nombre,
         apellidos, 
         edad,
@@ -23,13 +30,14 @@
         pass
     )
     VALUES(
-        'Alvaro',
-        'Silva Caballero',
-        46,
-        'alvarosc2@gmail.com',
-        '67jkjduhg'
-    );";
-    $resultado = mysqli_query($conexion, $query);
+        ?,
+        ?,
+        ?,
+        ?,
+        ?
+    );");
     
+    $stmt->bind_param('sssss', $nombre, $apellidos, $edad, $email, $pass);
     
-    
+    $stmt->execute();
+    $stmt->close();
